@@ -1,0 +1,249 @@
+@variant glass (&[data-color^="glass"]);
+
+@variant accent-blue (&:where(
+&[data-color="accent:blue"],
+[data-color="accent:yellow"], html[data-is-mobile="false"] &[data-color="hocus:accent:blue"]:hover, html[data-is-mobile="true"] &[data-color="hocus:accent:blue"]:active,
+&[data-color="hocus:accent:blue"]:focus-visible
+));
+
+@variant accent-pink (&:where(
+&[data-color="accent:pink"], html[data-is-mobile="false"] &[data-color="hocus:accent:pink"]:hover, html[data-is-mobile="true"] &[data-color="hocus:accent:pink"]:active,
+&[data-color="hocus:accent:pink"]:focus-visible
+));
+
+@variant accent-yellow (&:where(
+&[data-color="accent:yellow"], html[data-is-mobile="false"] &[data-color="hocus:accent:yellow"]:hover, html[data-is-mobile="true"] &[data-color="hocus:accent:yellow"]:active,
+&[data-color="hocus:accent:yellow"]:focus-visible
+));
+
+@layer components {
+
+  [data-type^="button-"] {
+    /*
+    Default CSS variables for the button.
+    These are changed by color variants below.
+    */
+    --primary-color: var(--card);
+    --secondary-color: var(--foreground);
+    --button-text-color: var(--primary-color);
+    --button-bg-color: var(--secondary-color);
+    --button-border-color: color-mix(in oklab, var(--secondary-color) 80%, var(--primary-color));
+
+    /* Applying base styles without color utilities */
+    @apply
+    border
+    rounded-md
+    focus-visible:rounded-md
+    flex
+    items-center
+    justify-center
+    select-none
+    font-semibold
+    px-7 py-3 gap-4
+    relative
+    overflow-hidden
+    ;
+
+    /* Using CSS properties driven by variables */
+    color: var(--button-text-color);
+    background-color: var(--button-bg-color);
+    border-color: var(--button-border-color);
+    outline: revert;
+    transition: color var(--default-transition-duration) var(--default-transition-timing-function),
+    background-color var(--default-transition-duration) var(--default-transition-timing-function),
+    border-color var(--default-transition-duration) var(--default-transition-timing-function),
+    transform var(--default-transition-duration) var(--default-transition-timing-function),
+    outline 0s;
+
+    html[data-is-mobile="false"] &:hover,
+    html[data-is-mobile="true"] &:active,
+    &:focus-visible {
+      @apply shadow-md;
+      --button-bg-color: color-mix(in oklab, var(--secondary-color) 80%, var(--primary-color));
+      --button-border-color: var(--primary-color);
+    }
+
+    /* --- Ripple Effect --- */
+
+    .ripple {
+      @apply absolute transform animate-ripple rounded-full pointer-events-none;
+      background-color: color-mix(in oklab, var(--button-text-color) 70%, transparent);
+      will-change: transform, opacity;
+    }
+
+    &[data-ripple="false"] .ripple {
+      display: none;
+    }
+
+    /* --- Variants --- */
+
+    &[data-bold="false"] {
+      @apply font-normal;
+    }
+
+    &[data-popup-effect="true"] {
+      @apply transform transition-transform;
+
+      html[data-is-mobile="false"] &:hover,
+      html[data-is-mobile="true"] &:active, &:focus-visible {
+        @apply scale-105;
+      }
+    }
+
+    &:not([data-appearance="card"]) {
+
+      /* --- Sizing --- */
+
+      &[data-size="lg"] {
+        @apply px-5 py-2 gap-2;
+      }
+
+      &[data-size="md"] {
+        @apply px-3 py-1 gap-1;
+      }
+
+      &[data-size="sm"] {
+        @apply px-1 py-0 gap-1;
+      }
+
+      /* --- Child Icon Styles --- */
+
+      > .startIcon, > .endIcon {
+        @apply text-xl;
+      }
+    }
+
+    /* Icon Sizing */
+
+    &[data-start-icon-size="lg"] > .startIcon, &[data-end-icon-size="lg"] > .endIcon {
+      @apply text-lg;
+    }
+
+    &[data-start-icon-size="md"] > .startIcon, &[data-end-icon-size="md"] > .endIcon {
+      @apply text-base;
+    }
+
+    &[data-start-icon-size="sm"] > .startIcon, &[data-end-icon-size="sm"] > .endIcon {
+      @apply text-sm;
+    }
+
+    /* Icon Padding */
+
+    &[data-start-icon-padding="xl"] > .startIcon {
+      @apply mr-4;
+    }
+
+    &[data-start-icon-padding="lg"] > .startIcon {
+      @apply mr-3;
+    }
+
+    &[data-start-icon-padding="md"] > .startIcon {
+      @apply mr-2;
+    }
+
+    &[data-start-icon-padding="sm"] > .startIcon {
+      @apply mr-1;
+    }
+
+    &[data-end-icon-padding="xl"] > .endIcon {
+      @apply ml-4;
+    }
+
+    &[data-end-icon-padding="lg"] > .endIcon {
+      @apply ml-3;
+    }
+
+    &[data-end-icon-padding="md"] > .endIcon {
+      @apply ml-2;
+    }
+
+    &[data-end-icon-padding="sm"] > .endIcon {
+      @apply ml-1;
+    }
+
+    /* Icon Effects */
+
+    &[data-start-icon-effect="slide"] > .startIcon,
+    &[data-end-icon-effect="slide"] > .endIcon {
+      @apply animate-arrow-slide;
+    }
+
+    html[data-is-mobile="false"] &:hover,
+    html[data-is-mobile="true"] &:active, &:focus-visible {
+      &[data-start-icon-effect="hocus:slide"] > .startIcon,
+      &[data-end-icon-effect="hocus:slide"] > .endIcon {
+        @apply animate-arrow-slide;
+      }
+    }
+
+    &[data-start-icon-effect="expanded:flip"] > .startIcon,
+    &[data-end-icon-effect="expanded:flip"] > .endIcon {
+      @apply transition-transform duration-200;
+    }
+
+    &[aria-expanded="true"] {
+      &[data-start-icon-effect="expanded:flip"] > .startIcon,
+      &[data-end-icon-effect="expanded:flip"] > .endIcon {
+        @apply rotate-180;
+      }
+    }
+
+    /* --- Card Appearance --- */
+
+    &[data-appearance="card"] {
+      @apply flex-col justify-between items-start snap-start w-40 px-3 py-3 gap-3;
+
+      > span:nth-child(1) {
+        @apply text-start text-lg font-semibold flex-1;
+      }
+
+      > .endIcon {
+        @apply text-4xl self-end;
+      }
+    }
+
+
+    /*
+    ================================
+    COLOR VARIANTS
+    ================================
+    */
+
+    /* --- Glass Color Variant --- */
+
+    @variant glass {
+      --primary-color: var(--glass-primary);
+      --secondary-color: var(--glass-secondary);
+    }
+
+    &[data-color="glass:shadow"] {
+      @apply dark:text-shadow-md/80;
+
+      > .startIcon, > .endIcon {
+        @apply dark:drop-shadow-sm/80
+      }
+    }
+
+
+    /* Accent: Blue */
+    @variant accent-blue {
+      --primary-color: var(--accent-blue-primary);
+      --secondary-color: var(--accent-blue-secondary);
+    }
+
+
+    /* Accent: Pink */
+    @variant accent-pink {
+      --primary-color: var(--accent-pink-primary);
+      --secondary-color: var(--accent-pink-secondary);
+    }
+
+
+    /* Accent: Yellow */
+    @variant accent-yellow {
+      --primary-color: var(--accent-yellow-primary);
+      --secondary-color: var(--accent-yellow-secondary);
+    }
+
+  }
+}
