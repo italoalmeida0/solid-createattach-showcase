@@ -99,4 +99,8 @@ Multiply these benefits across dozens of components and pages in a real applicat
 - SSR safety without defensive programming
 - No more `if (!element) return` checks
 
+
+### Proposal for Solid 2.0, preferably read after studying the showcase code. [Link](https://github.com/italoalmeida0/solid-createattach-showcase/blob/main/SOLID2..md)
+
+
 Developers can focus on business logic instead of worrying about element existence, lifecycle management, or SSR edge cases.
